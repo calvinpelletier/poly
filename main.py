@@ -66,7 +66,7 @@ class CLI:
         model = build_model(name.split('/')[0])
         s._train(model, trial.hook(), steplimit=steplimit, **hparams)
 
-    def hparam_search(s, name='simplest/search', n_trials=2, clean=False, prune=False, steplimit=5_000):
+    def hparam_search(s, name='simplest/search', n_trials=16, clean=False, prune=False, steplimit=5_000):
         model = build_model(name.split('/')[0])
 
         # create an experiment (a collection of trials)

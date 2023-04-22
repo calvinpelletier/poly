@@ -34,8 +34,19 @@ def lightest():
     ))
 
 
-def general(nc_in=3, nc_out=3, k=3, actv='tanh', padtype='replicate'):
-    return m.Model(m.conv(nc_in, nc_out, k=k, actv=actv, padtype=padtype))
+def general(nc_in=3, nc_out=3, nc=64, n_pre_layers=2, n_post_layers=2):
+    return m.Model(m.seq(
+        # pre (1x1 convolutions)
+        m.conv(nc_in, nc, k=1, actv='mish'),
+        m.repeat(n_pre_layers, m.conv(nc, nc, k=1, actv='mish')),
+
+        # main (3x3 convolution)
+        m.conv(nc, nc, actv='mish', padtype='replicate'),
+
+        # post (1x1 convolutions)
+        m.repeat(n_post_layers, m.conv(nc, nc, k=1, actv='mish')),
+        m.conv(nc, nc_out, k=1, actv='tanh'),
+    ))
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
